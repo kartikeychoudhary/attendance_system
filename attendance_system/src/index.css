@@ -43,14 +43,13 @@ body::-webkit-scrollbar-thumb {
 
 main {
   margin-left: 5rem;
-  padding: 1rem;
 }
 
 .navbar {
   position: fixed;
   background-color: var(--bg-primary);
   transition: width 600ms ease;
-  overflow: scroll;
+  /* overflow: scroll; */
 }
 
 .navbar-nav {
@@ -162,6 +161,7 @@ i {
 
   main {
     margin: 0;
+    margin-bottom: 5rem;
   }
 }
 

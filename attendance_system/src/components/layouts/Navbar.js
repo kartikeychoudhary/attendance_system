@@ -1,13 +1,26 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { signOut } from "../../store/actions/authActions";
 
 class Navbar extends Component {
+  signOut = () => {
+    localStorage.setItem("uid", "Logout");
+    localStorage.setItem("UserState", "Logout");
+    // this.props.history.push("/login");
+    this.props.signout();
+    // window.location.reload();
+  };
+
   render() {
+    const path = window.location.pathname;
+    const type = this.props.firebase.profile.type;
+
     return (
-      <nav className="navbar">
+      <nav className="navbar" style={{ zIndex: 1 }}>
         <ul className="navbar-nav">
           <li className="logo">
-            <a href="#" className="nav-link">
+            <a href="#!" className="nav-link">
               <span className="link-text logo-text">Welcome</span>
               <svg
                 aria-hidden="true"
@@ -34,45 +47,113 @@ class Navbar extends Component {
               </svg>
             </a>
           </li>
+          {path === "/login" ? (
+            <>
+              <li className="nav-item">
+                <a href="/login" className="nav-link">
+                  <i className="fas fa-sign-in-alt fa-lg"></i>
+                  <span className="link-text">Login</span>
+                </a>
+              </li>
+              <li className="nav-item">
+                <a href="/signup/student" className="nav-link">
+                  <i className="fas fa-user-plus fa-lg"></i>
+                  <span className="link-text">Sign-Up Student</span>
+                </a>
+              </li>
+              <li className="nav-item">
+                <a href="/signup/teacher" className="nav-link">
+                  <i className="fas fa-user-plus fa-lg"></i>
+                  <span className="link-text">Sign-Up Teacher</span>
+                </a>
+              </li>
+            </>
+          ) : null}
 
-          <li className="nav-item">
-            <a href="/" className="nav-link">
-              <i className="fas fa-home fa-lg"></i>
-              <span className="link-text">Home</span>
-            </a>
-          </li>
+          {path === "/signup/student" || path === "/signup/teacher" ? (
+            <li className="nav-item">
+              <a href="/login" className="nav-link">
+                <i className="fas fa-sign-in-alt fa-lg"></i>
+                <span className="link-text">Go back to login</span>
+              </a>
+            </li>
+          ) : null}
 
-          <li className="nav-item">
-            <a href="/sessions" className="nav-link">
-              <i className="fas fa-book fa-lg"></i>
-              <span className="link-text">Sessions</span>
-            </a>
-          </li>
+          {type === "student" ? (
+            <>
+              <li className="nav-item">
+                <a href="/" className="nav-link">
+                  <i className="fas fa-user-alt fa-lg"></i>
+                  <span className="link-text">Profile</span>
+                </a>
+              </li>
+            </>
+          ) : null}
 
-          <li className="nav-item">
-            <a href="/teachers" className="nav-link">
-              <i className="fas fa-chalkboard-teacher fa-lg"></i>
-              <span className="link-text">Teachers</span>
-            </a>
-          </li>
+          {type === "teacher" ? (
+            <>
+              <li className="nav-item">
+                <a href="/" className="nav-link">
+                  <i className="fas fa-user-alt fa-lg"></i>
+                  <span className="link-text">Profile</span>
+                </a>
+              </li>
 
-          <li className="nav-item">
-            <a href="/students" className="nav-link">
-              <i className="fas fa-user-graduate fa-lg"></i>
-              <span className="link-text">Students</span>
-            </a>
-          </li>
+              <li className="nav-item">
+                <a href="/sessions" className="nav-link">
+                  <i className="fas fa-book fa-lg"></i>
+                  <span className="link-text">Sessions</span>
+                </a>
+              </li>
+            </>
+          ) : null}
 
-          <li className="nav-item" id="themeButton">
-            <a href="/" className="nav-link">
-              <i className="fas fa-sign-out-alt fa-lg"></i>
-              <span className="link-text">SignOut</span>
-            </a>
-          </li>
+          {type === "admin" ? (
+            <>
+              <li className="nav-item">
+                <a href="/teachers" className="nav-link">
+                  <i className="fas fa-chalkboard-teacher fa-lg"></i>
+                  <span className="link-text">Teachers</span>
+                </a>
+              </li>
+
+              <li className="nav-item">
+                <a href="/students" className="nav-link">
+                  <i className="fas fa-user-graduate fa-lg"></i>
+                  <span className="link-text">Students</span>
+                </a>
+              </li>
+            </>
+          ) : null}
+
+          {type ? (
+            <>
+              <li className="nav-item" id="themeButton">
+                <a href="/login" className="nav-link" onClick={this.signOut}>
+                  <i className="fas fa-sign-out-alt fa-lg"></i>
+                  <span className="link-text">SignOut</span>
+                </a>
+              </li>
+            </>
+          ) : null}
         </ul>
       </nav>
     );
   }
 }
 
-export default Navbar;
+const mapStateToProps = ({ firebase, user }) => {
+  return { firebase, user };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  signout: () => dispatch(signOut()),
+  // dispatchLoginRequest: ({ email, password }) => {
+  //   dispatch({
+  //     type: LOGIN_USER_REQUEST,
+  //     payload: { email, password },
+  //   });
+  // },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

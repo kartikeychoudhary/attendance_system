@@ -16,19 +16,20 @@
 ## Interface
 
  - ### Admin
-  - [ ] Login Admin
-  - [ ] CURD Teachers
+  - [x] Login Admin
+  - [x] CURD Teachers
   - [ ] Stats over classes and session
 
  - ### Teacher
-  - [ ] Login Teacher
-  - [ ] CURD Session
-  - [ ] Students Attendace
+  - [x] Login Teacher
+  - [x] CURD Session
+  - [x] Students Attendace
 
  - ### Students
-  - [ ] Login Student
-  - [ ] Add Profile
-  - [ ] Edit Profile
+  - [x] Login Student
+  - [x] Add Profile
+  - [x] Edit Profile
   - [ ] Attendent Class
 
-
+ - ### New Changes 
+  - [ ] create session page for  attend the session
