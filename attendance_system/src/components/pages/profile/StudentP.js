@@ -17,7 +17,11 @@ import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import { LinearProgress } from "@material-ui/core";
 
+import axios, { post } from "axios";
+
 import firebase from "../../../firebase/firebase";
+
+import VideoRecorder from "../../layouts/VideoRecorder";
 
 class StudentP extends Component {
   state = {
@@ -29,6 +33,8 @@ class StudentP extends Component {
     status: "",
     department: "",
   };
+
+  componentDidMount() {}
 
   static getDerivedStateFromProps(props, state) {
     const { user } = props;
@@ -64,6 +70,8 @@ class StudentP extends Component {
   }
 
   handleProfilePhotoChange = async (e) => {
+    console.log("photo upload");
+
     const imageFile = e.target.files[0];
     const uid = localStorage.getItem("uid");
 
@@ -91,6 +99,35 @@ class StudentP extends Component {
             );
           });
       });
+  };
+
+  handleVideoFileUpload = async (e) => {
+    e.preventDefault();
+    console.log("video upload");
+    const file = e.target.files[0];
+    var blob = file.slice(0, file.size, file.type);
+    var t = file.name.split(".").pop();
+    const newFile = new File([blob], localStorage.getItem("uid") + "." + t, {
+      type: "image/png",
+    });
+    const formData = new FormData();
+    console.log(newFile);
+    formData.append("file", newFile);
+
+    axios
+      .post("http://127.0.0.1:5000/video/upload", formData)
+      .then((res) => console.log(res))
+      .catch((err) => console.warn(err));
+  };
+
+  handleInputChange = (e) => {
+    e.preventDefault();
+
+    if (e.target.name === "photoUpload") {
+      this.handleVideoFileUpload(e);
+    } else {
+      this.handleVideoFileUpload(e);
+    }
   };
 
   render() {
@@ -161,24 +198,27 @@ class StudentP extends Component {
           <Paper style={{ marginTop: "1rem", padding: "1rem" }} elevation={3}>
             <Grid container>
               <Grid item xs={12} sm={6} md={3} style={{ padding: "1rem" }}>
-                <Typography>
-                  <input
-                    accept="image/*"
-                    id="icon-button-file"
-                    type="file"
-                    style={{ display: "none" }}
-                    onChange={this.handleProfilePhotoChange}
-                  />
-                  <label htmlFor="icon-button-file">
-                    <IconButton
-                      variant="outlined"
-                      aria-label="upload picture"
-                      component="span"
-                    >
-                      <PhotoCamera />
-                    </IconButton>
-                  </label>
-                </Typography>
+                <form>
+                  <Typography>
+                    <input
+                      accept="image/*"
+                      id="icon-button-file"
+                      type="file"
+                      name="photoUpload"
+                      style={{ display: "none" }}
+                      onChange={this.handleInputChange}
+                    />
+                    <label htmlFor="icon-button-file">
+                      <IconButton
+                        variant="outlined"
+                        aria-label="upload picture"
+                        component="span"
+                      >
+                        <PhotoCamera />
+                      </IconButton>
+                    </label>
+                  </Typography>
+                </form>
 
                 <Avatar
                   alt="Remy Sharp"
@@ -220,31 +260,41 @@ class StudentP extends Component {
               </Grid>
               <Grid item xs={6} sm={6} md={3} style={{ padding: "1rem" }}>
                 <div>
-                  <Typography variant="h6"> Update Face Data </Typography>
-                  <input
-                    accept="image/*"
-                    id="icon-button-file"
-                    type="file"
-                    style={{ display: "none" }}
-                  />
-                  <label htmlFor="icon-button-file">
-                    <IconButton
-                      variant="outlined"
-                      color="primary"
-                      aria-label="upload picture"
-                      component="span"
-                    >
-                      <PhotoCamera />
-                    </IconButton>
-                  </label>
+                  <form>
+                    <Typography variant="h6"> Update Face Data </Typography>
+                    <input
+                      accept="image/*"
+                      id="icon-button-file"
+                      type="file"
+                      name="videoUpload"
+                      style={{ display: "none" }}
+                      onChange={this.handleInputChange}
+                    />
+                    <label htmlFor="icon-button-file">
+                      <IconButton
+                        variant="outlined"
+                        color="primary"
+                        aria-label="upload picture"
+                        component="span"
+                      >
+                        <PhotoCamera />
+                      </IconButton>
+                    </label>
 
-                  {false ? (
-                    <Button variant="outlined" color="primary">
-                      Start Upload
-                    </Button>
-                  ) : (
-                    "Select File"
-                  )}
+                    {false ? (
+                      <Button variant="outlined" color="primary">
+                        Start Upload //{" "}
+                      </Button>
+                    ) : (
+                      // <Button variant="outlined" color="primary">
+                      //   Start Upload
+                      // </Button>
+                      // <Button variant="outlined" color="primary">
+                      //   Start Upload
+                      // </Button>
+                      "Select File"
+                    )}
+                  </form>
                 </div>
               </Grid>
 
@@ -256,6 +306,9 @@ class StudentP extends Component {
                     id="icon-button-file"
                     type="file"
                     style={{ display: "none" }}
+                    onChange={() => {
+                      console.log("test");
+                    }}
                   />
                   <label htmlFor="icon-button-file">
                     <IconButton
