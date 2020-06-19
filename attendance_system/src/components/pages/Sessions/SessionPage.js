@@ -180,12 +180,15 @@ class SessionPage extends Component {
                   <ul>
                     {this.state.loadedSessions.map((session) => {
                       return (
-                        <li>
-                          {session.name} : {session.semester} : {session.id} :
+                        <li style={{marginTop:"1rem"}}>
+                          {session.name} : {session.semester} semester : {session.id} :
                           <Button
                             variant="outlined"
                             color="primary"
                             style={{ marginLeft: "1rem" }}
+                            onClick={() => {
+                              window.location.href = `/session/${session.id}`;
+                            }}
                           >
                             Submit Attendance
                           </Button>

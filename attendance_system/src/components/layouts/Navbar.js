@@ -105,6 +105,13 @@ class Navbar extends Component {
                   <span className="link-text">Sessions</span>
                 </a>
               </li>
+
+              <li className="nav-item">
+                <a href="/check/attendance-teacher" className="nav-link">
+                  <i className="fas fa-book fa-lg"></i>
+                  <span className="link-text">Attendance</span>
+                </a>
+              </li>
             </>
           ) : null}
 

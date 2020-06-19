@@ -32,6 +32,7 @@ class StudentP extends Component {
     roll: "",
     status: "",
     department: "",
+    prediction: false,
   };
 
   componentDidMount() {}
@@ -124,10 +125,35 @@ class StudentP extends Component {
     e.preventDefault();
 
     if (e.target.name === "photoUpload") {
-      this.handleVideoFileUpload(e);
+      this.handleProfilePhotoChange(e);
     } else {
       this.handleVideoFileUpload(e);
     }
+  };
+
+  handleCheckPrediction = (e) => {
+    e.preventDefault();
+    console.log("Check Prediction");
+    const file = e.target.files[0];
+    var blob = file.slice(0, file.size, file.type);
+    var t = file.name.split(".").pop();
+    const newFile = new File([blob], localStorage.getItem("uid") + "." + t, {
+      type: "image/png",
+    });
+    const formData = new FormData();
+    console.log(newFile);
+    formData.append("file", newFile);
+
+    axios
+      .post("http://127.0.0.1:5000/predict", formData)
+      .then((res) => {
+        res.data.result.forEach(person => {
+          if(person === this.props.uid){
+            this.setState({prediction:true})
+          }
+        });
+      })
+      .catch((err) => console.warn(err));
   };
 
   render() {
@@ -205,6 +231,7 @@ class StudentP extends Component {
                       id="icon-button-file"
                       type="file"
                       name="photoUpload"
+                      id="photoUpload"
                       style={{ display: "none" }}
                       onChange={this.handleInputChange}
                     />
@@ -266,34 +293,11 @@ class StudentP extends Component {
                       accept="image/*"
                       id="icon-button-file"
                       type="file"
+                      id="videoUpload"
                       name="videoUpload"
-                      style={{ display: "none" }}
+                      style={{ marginTop: "1rem" }}
                       onChange={this.handleInputChange}
                     />
-                    <label htmlFor="icon-button-file">
-                      <IconButton
-                        variant="outlined"
-                        color="primary"
-                        aria-label="upload picture"
-                        component="span"
-                      >
-                        <PhotoCamera />
-                      </IconButton>
-                    </label>
-
-                    {false ? (
-                      <Button variant="outlined" color="primary">
-                        Start Upload //{" "}
-                      </Button>
-                    ) : (
-                      // <Button variant="outlined" color="primary">
-                      //   Start Upload
-                      // </Button>
-                      // <Button variant="outlined" color="primary">
-                      //   Start Upload
-                      // </Button>
-                      "Select File"
-                    )}
                   </form>
                 </div>
               </Grid>
@@ -305,36 +309,20 @@ class StudentP extends Component {
                     accept="image/*"
                     id="icon-button-file"
                     type="file"
-                    style={{ display: "none" }}
-                    onChange={() => {
-                      console.log("test");
-                    }}
+                    name="detectChanges"
+                    id="detectChanges"
+                    style={{ marginTop: "1rem" }}
+                    onChange={this.handleCheckPrediction}
                   />
-                  <label htmlFor="icon-button-file">
-                    <IconButton
-                      variant="outlined"
-                      color="primary"
-                      aria-label="upload picture"
-                      component="span"
-                    >
-                      <PhotoCamera />
-                    </IconButton>
-                  </label>
-
-                  {false ? (
-                    <Button variant="outlined" color="primary">
-                      Start Upload
-                    </Button>
-                  ) : (
-                    "Select File"
-                  )}
                 </div>
+                <br/>
+                Prediction : {this.state.prediction ? "Found" : "Not Found"}
               </Grid>
-              <Grid item xs={12} sm={6} md={3} style={{ padding: "1rem" }}>
+              {/* <Grid item xs={12} sm={6} md={3} style={{ padding: "1rem" }}>
                 <div>
                   <Typography variant="h6"> View Attendance </Typography>
                 </div>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Paper>
         </Container>

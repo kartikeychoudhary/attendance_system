@@ -21,6 +21,10 @@ const composeEnhancers =
 
 // const initialState = {};
 
+if (!localStorage.getItem("uid")) {
+  localStorage.setItem("uid", "Logout");
+}
+
 export const store = createStore(
   rootReducers,
   composeEnhancers(

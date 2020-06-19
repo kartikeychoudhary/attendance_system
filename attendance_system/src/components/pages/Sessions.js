@@ -73,12 +73,17 @@ class Sessions extends Component {
                 newData["teacher"] = this.props.uid;
                 this.props.firestore
                   .add({ collection: "sessions" }, newData)
-                  .then(() => {
-                    this.setState((prevState) => {
-                      const data = [...prevState.data];
-                      data.push(newData);
-                      return { ...prevState, data };
-                    });
+                  .then((res) => {
+                    console.log(res.id);
+                    this.props.firestore
+                      .set({ collection: "attendance", doc: res.id }, {})
+                      .then(() => {
+                        this.setState((prevState) => {
+                          const data = [...prevState.data];
+                          data.push(newData);
+                          return { ...prevState, data };
+                        });
+                      });
                   });
               }, 600);
             }),

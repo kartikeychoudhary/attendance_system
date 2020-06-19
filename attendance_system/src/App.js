@@ -17,6 +17,8 @@ import { Provider } from "react-redux";
 import { store, rrfProps } from "./store";
 import SignUpStudent from "./components/auth/SignUpStudent";
 import SignUpTeacher from "./components/auth/SignUpTeacher";
+import Session from "./components/pages/Sessions/Session";
+import TeacherAttendance from "./components/pages/Attendance/TeacherAttendance";
 
 function App() {
   return (
@@ -29,12 +31,18 @@ function App() {
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route exact path="/sessions" component={Sessions} />
+                <Route exact path="/session/:id" component={Session} />
                 <Route exact path="/teachers" component={Teachers} />
                 <Route exact path="/students" component={Students} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/signup" component={SignUp} />
                 <Route exact path="/signup/student" component={SignUpStudent} />
                 <Route exact path="/signup/teacher" component={SignUpTeacher} />
+                <Route
+                  exact
+                  path="/check/attendance-teacher"
+                  component={TeacherAttendance}
+                />
               </Switch>
             </Router>
           </main>
